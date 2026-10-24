@@ -3,48 +3,56 @@
 .component-nav {
   position: absolute;
   /* top: 0px; */
-  width: 336px;
+  width: 432px;
   height: 56px;
   background-image: url("/common/assets/nav-bg.png");
-  background-size: 336px 56px;
+  background-size: 432px 56px;
   position: relative;
 }
 
 .component-nav-noback {
   position: absolute;
   /* top: 0px; */
-  width: 336px;
+  width: 432px;
   height: 56px;
   position: relative;
   
 }
 
+/* ---------- 导航条安全区（REDMI Watch 5）----------
+   RW5 屏幕 432x514，四角是半径约 79px 的圆弧（实测：y=0 时可见区为 x 72~359）。
+   原来的 left/right 16px + top 7px 正好落在圆弧里，标题和时间会被切掉，
+   所以统一内缩到 left/right 30px、top 22px；带返回键的页面把返回键一并内缩。 */
+/* 注意：本组是定位元素（position: absolute），组内
+   .component-nav-title-text-backb 的 left/top 是相对**本组**计算的，
+   所以这里写 20/2，标题最终落在 (32+20, 20+2) = (52, 22)，
+   与不带返回键页面的标题、时间在同一水平线上。 */
 .component-nav-backGroup {
-  top: 7px;
-  left: 16px;
-  width: 202px;
-  /* display: flex;
-  flex-direction: row */
+  position: absolute;
+  top: 20px;
+  left: 32px;
+  width: 240px;
 }
 
 .component-nav-backButton {
-  height: 42px;
+  height: 34px;
   object-fit: contain;
 }
 
 .component-nav-title-text {
   position: absolute;
   color: #ffffff;
-  width: 202px;
-  left: 16px;
-  top: 7px;
+  width: 240px;
+  left: 30px;
+  top: 22px;
   font-size: 32px;
   font-weight: 600;
 }
 
 .component-nav-title-text-backb{
   position: absolute;
-  left: 26px;
+  left: 20px;
+  top: 2px;
   color: #ffffff;
   font-size: 32px;
   font-weight: 600;
@@ -53,8 +61,8 @@
 .component-nav-title-time {
   position: absolute;
   color: #ffffff;
-  right: 16px;
-  top: 7px;
+  right: 30px;
+  top: 22px;
   font-size: 32px;
   font-weight: 600;
   text-align: right;
@@ -64,7 +72,7 @@
 
 .component-button {
   display: flex;
-  width: 312px;
+  width: 408px;
   height: 112px;
   padding: 16px 12px;
   align-items: center;
@@ -80,4 +88,26 @@
   font-style: normal;
   font-weight: 600;
   line-height: normal;
+}
+/* ---------- REDMI Watch 5 (432x514) guide-stage ----------
+   The guide art is 336x480. It is scaled 1.071x to 360x514 and
+   centered, so 36px remain on both sides. The ambient layer uses
+   the same art with object-fit:cover to fill those side strips. */
+.guide-stage {
+  width: 360px;
+  height: 514px;
+}
+
+.guide-ambient {
+  position: absolute;
+  left: -36px;
+  width: 432px;
+  height: 514px;
+  object-fit: cover;
+  opacity: 0.4;
+}
+
+.guide-img {
+  width: 360px;
+  height: 514px;
 }

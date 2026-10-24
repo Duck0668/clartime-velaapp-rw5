@@ -1,31 +1,14 @@
 <template>
   <div class="page">
-    <stack style="width: 100%; height: 100%" class="horizontal-center">
-      <img src="/common/assets/guide_2.png" alt="" />
-      <!-- 选择主题 -->
-      <div
-        style="
-          position: absolute;
-          width: 164px;
-          height: 305px;
-          top: 175px;
-          left: 0px;
-        "
-        onclick="next_1()"
-      ></div>
-      <div
-        style="
-          position: absolute;
-          width: 161px;
-          height: 267px;
-          top: 213px;
-          right: 0px;
-        "
-        onclick="next_2()"
-      ></div>
+    <stack class="guide-stage horizontal-center">
+      <image class="guide-ambient" src="/common/assets/guide_2.png" />
+      <image class="guide-img" src="/common/assets/guide_2.png" />
+      <div style="position: absolute; width: 176px; height: 327px; top: 187px; left: 0px;" onclick="next_1()"></div>
+      <div style="position: absolute; width: 172px; height: 286px; top: 228px; right: 0px;" onclick="next_2()"></div>
     </stack>
   </div>
 </template>
+
 <script>
 export default {
   private: {},

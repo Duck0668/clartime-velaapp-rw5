@@ -88,7 +88,7 @@ export default {
 @import "../../common/style/component.css";
 
 .component-courseChange-button {
-  width: 100%;
+  width: 408px;
   height: 112px;
   opacity: 1;
   border-radius: 24px;

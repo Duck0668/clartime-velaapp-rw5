@@ -21,6 +21,8 @@
           <image class="home-back" src="/common/assets/home_back_1.png" else />
         </div>
         <div class="content-home horizontal-center">
+          <!-- 整体下移 24px，与背景顶部色块（y 24 起）保持同一基线，同时给屏幕 R 角留出余量 -->
+          <div style="height: 24px;"></div>
           <div class="component-nav-noback">
             <text class="component-nav-title-text" onclick="quit">{{ title_home }}</text>
             <!-- <text class="component-nav-title-time">{{ time }}</text> -->
@@ -66,7 +68,7 @@
           >
             <!-- 课程结束卡片 -->
             <text class="component-courseCard-nowCourseContent-text1">今日暂无课程</text>
-            <text class="component-courseCard-nowCourseContent-text2" style="width: 300px;">好好休息，明天见</text>
+            <text class="component-courseCard-nowCourseContent-text2" style="width: 380px;">好好休息，明天见</text>
           </div>
           <div
             elif="courseSchedule[indexNow].type === 'end'"
@@ -77,8 +79,7 @@
             <text class="component-courseCard-nowCourseContent-text2">明天见</text>
           </div>
           <div else class="component-courseCard bg-white-10 horizontal-center">
-            <!-- 上课期间卡片 -->
-            <text class="component-courseCard-nowCourseContent-text1" style="top: 12px">当前</text>
+            <!-- 上课期间卡片（"当前"标签已按需求去掉，课程名与时间直接作为主体） -->
             <marquee
               text-offset="{{8}}"
               scrollamount="{{20}}"
@@ -267,7 +268,7 @@ export default {
     let {scrollX, scrollY} = event
     if (scrollY == 0) {
       this.indicatorTop = 1
-    } else if (scrollY == 480) {
+    } else if (scrollY == 514) {
       this.indicatorTop = 25
     }
   },
@@ -413,8 +414,16 @@ export default {
     this.timer = this.$app.$def.timeUpdate.updateTimePersecond((timeData) => {
       this.time = timeData.time
       this.seconds = timeData.seconds
-      if (this.getCurrentCourseIndex() != this.indexNow) {
-        this.courseRelatedUpadate()
+      if (this.courseSchedule === -1) {
+        // 当天无课：倒计时显示 ---，也不要再按索引触发整表刷新（索引会是 NaN）
+        this.remain = "---"
+      } else {
+        // 剩余分钟每秒重算一次（只做减法，不读文件），
+        // 否则要等下一节课索引变化才会变，倒计时看起来是"卡住"的
+        this.remain = this.getRemainingTime()
+        if (this.getCurrentCourseIndex() != this.indexNow) {
+          this.courseRelatedUpadate()
+        }
       }
     })
   },
@@ -483,7 +492,7 @@ export default {
 /* 界面布局 */
 .content {
   width: 100%;
-  height: 480px;
+  height: 514px;
 
   display: flex;
   flex-direction: column;
@@ -494,21 +503,23 @@ export default {
 
 .content-home {
   width: 100%;
-  height: 480px;
+  height: 514px;
   scroll-snap-align: start;
 }
 
+/* home_back_*.png 已经按 RW5 的 432x514 烘焙过（真机不支持 object-fit:fill），
+   这里尺寸与素材 1:1，object-fit 写什么都一样 */
 .home-back {
   width: 100%;
-  height: 480px;
+  height: 514px;
   scroll-snap-align: start;
-  object-fit: cover;
+  object-fit: fill;
 
   opacity: 1;
 }
 .content-other {
   width: 100%;
-  height: 480px;
+  height: 514px;
   scroll-snap-align: start;
 
   background-color: rgba(0, 0, 0);
@@ -549,7 +560,7 @@ export default {
 }
 
 .component-indexCard-timeHM {
-  width: 144px;
+  width: 188px;
   height: 80px;
   border-radius: 26px;
 }
@@ -559,7 +570,7 @@ export default {
   font-weight: 700;
 }
 .component-indexCard-Week {
-  width: 84px;
+  width: 110px;
   height: 32px;
   border-radius: 26px;
 }
@@ -570,18 +581,18 @@ export default {
   font-weight: 500;
 }
 .component-indexCard-dayN {
-  width: 56px;
+  width: 74px;
   height: 32px;
   border-radius: 26px;
 }
 
 .component-indexCard-timeS {
-  width: 47px;
+  width: 58px;
   height: 44px;
   border-radius: 26px;
 }
 .component-indexCard-remainingTime {
-  width: 93px;
+  width: 126px;
   height: 44px;
   border-radius: 26px;
 }
@@ -592,7 +603,7 @@ export default {
   font-weight: 500;
 }
 .component-indexCard-date {
-  width: 144px;
+  width: 188px;
   height: 68px;
   border-radius: 26px;
 }
@@ -602,12 +613,13 @@ export default {
   font-weight: 700;
 }
 
+/* 卡片上边界 228（与顶部色块底部 220 留 8px 缝），下边界 480（离屏底 34，避开 R 角） */
 .component-courseCard {
-  width: 312px;
-  height: 260px;
+  width: 400px;
+  height: 252px;
   border-radius: 36px;
   position: absolute;
-  bottom: 12px;
+  bottom: 34px;
 }
 
 .component-courseCard-nowCourseContent-text1 {
@@ -618,7 +630,7 @@ export default {
 }
 .component-courseCard-nowCourseContent-text2 {
   top: 2px;
-  width: 200px;
+  width: 320px;
   color: rgba(255, 255, 255, 0.6);
   font-size: 32px;
   font-weight: 700;
@@ -626,7 +638,7 @@ export default {
 }
 .component-courseCard-nowCourseContent-text3 {
   top: 10px;
-  width: 280px;
+  width: 360px;
   color: rgba(255, 255, 255, 0.6);
   font-size: 20px;
   font-weight: 500;
@@ -636,7 +648,7 @@ export default {
 .component-courseCard-nextCourseContent {
   position: absolute;
   bottom: 12px;
-  width: 288px;
+  width: 376px;
   height: 116px;
   border-radius: 24px;
 }
@@ -649,7 +661,7 @@ export default {
 }
 .component-courseCard-nextCourseContent-text2 {
   top: 14px;
-  width: 200px;
+  width: 280px;
   color: rgba(255, 255, 255, 0.6);
   font-size: 24px;
   font-weight: 700;
@@ -658,7 +670,7 @@ export default {
 .component-courseCard-nextCourseContent-text3 {
   top: 24px;
   /* 别问我问什么 top 和设计稿的不一样，top0 是和上一个贴在一起的，现在懂我意思了吧 */
-  width: 280px;
+  width: 350px;
   color: rgba(255, 255, 255, 0.6);
   font-size: 18px;
   font-weight: 500;
@@ -708,7 +720,7 @@ export default {
 
 /* 更多卡片 - 长方形部分 */
 .component-other-button_l {
-  width: 312px;
+  width: 408px;
   height: 138px;
   opacity: 1;
   border-radius: 36px;

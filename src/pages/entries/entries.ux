@@ -4,6 +4,7 @@
 
 <script>
 import file from "@system.file"
+import config from "../../common/config"
 let userSettingPath = "internal://files/data/userSetting.json"
 
 export default {
@@ -40,7 +41,47 @@ export default {
     })
   },
 
+  /**
+   * 调试模式启动（src/common/config.js 里 DEBUG_SKIP_GUIDE = true 时生效）
+   * 1) 补齐本地数据（缺什么补什么，不覆盖已有数据）
+   * 2) 读出本地主题，直接进入对应主题首页
+   * 3) 完全不经过 10 页引导，也不需要手机端推数据
+   */
+  debugBoot() {
+    const defaultTheme = config.DEBUG_DEFAULT_THEME || "Horizon"
+    this.$app.$def.dataManage.debugEnsureData(defaultTheme, async () => {
+      let themeName = defaultTheme
+      try {
+        const userSetting = await this.$app.$def.dataManage.getUserSetting()
+        if (userSetting && userSetting.setting && userSetting.setting.themeName) {
+          themeName = userSetting.setting.themeName
+        } else {
+          // 历史数据里主题为空，补写一次默认值，避免每次启动都走兜底
+          this.$app.$def.dataManage.changeUserSetting("themeName", defaultTheme)
+        }
+      } catch (e) {
+        console.error("[debug] 读取用户设置失败, 使用默认主题:", e)
+      }
+      let uri = "pages/entries/Horizon"
+      if (themeName === "Nucleus") {
+        uri = "pages/entries/Nucleus"
+      }
+      console.log("[debug] 跳过引导, 进入 " + uri)
+      this.$app.$def.router.push({
+        uri,
+        params: {
+          ___PARAM_LAUNCH_FLAG___: "clearTask"
+        }
+      })
+    })
+  },
+
   onShow() {
+    // 调试期：跳过引导，直接进主题首页（开关见 src/common/config.js）
+    if (config.DEBUG_SKIP_GUIDE) {
+      this.debugBoot()
+      return
+    }
     // this.$app.$def.dataManage.changeGuideSetting("guide_state", "done")
     // this.$app.$def.dataManage.clearData()
     let OuterThis = this

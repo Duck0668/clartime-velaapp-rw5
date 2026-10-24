@@ -90,8 +90,8 @@ export default {
 @import "../../../common/style/component.css";
 
 .content {
-  width: 336px;
-  height: 480px;
+  width: 432px;
+  height: 514px;
 
   display: flex;
   flex-direction: column;
@@ -100,10 +100,10 @@ export default {
 }
 .icon {
   position: absolute;
-  top: 146px;
+  top: 180px;
 }
 .text {
   position: absolute;
-  bottom: 146px;
+  bottom: 200px;
 }
 </style>

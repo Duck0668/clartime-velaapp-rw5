@@ -14,7 +14,7 @@
         >
           <div
             class="theme-card horizontal-center"
-            style="padding-left: 66px; padding-right: 66px"
+            style="padding-left: 96px; padding-right: 96px"
             onclick="setHorizon()"
           >
             <text class="theme-name">紧凑</text>
@@ -25,7 +25,7 @@
           </div>
           <div
             class="theme-card horizontal-center"
-            style="padding-left: 66px; padding-right: 66px"
+            style="padding-left: 96px; padding-right: 96px"
             onclick="setNucleus()"
           >
             <text class="theme-name">聚焦</text>
@@ -68,8 +68,8 @@ export default {
   updateHighlightLength(event) {
     let {scrollX, scrollY} = event
     // console.log("scrollX:", scrollX, "scrollY:", scrollY)
-    if (scrollX === 336) {
-      this.indicatorHighlight_left = "69px"
+    if (scrollX === 432) {
+      this.indicatorHighlight_left = "84px"
     } else if (scrollX === 0) {
       this.indicatorHighlight_left = "0px"
     }
@@ -97,8 +97,8 @@ export default {
           behavior: "smooth"
         })
       } else if (this.ThemeName === "Nucleus") {
-        this.$element("theme-list").scrollBy({
-          left: 336,
+        this.$element("theme-list").scrollTo({
+          left: 432,
           behavior: "smooth"
         })
       }
@@ -152,13 +152,13 @@ export default {
 @import "../../../common/style/component.css";
 
 .content {
-  width: 336px;
-  height: 480px;
+  width: 432px;
+  height: 514px;
 }
 
 .theme-content {
   width: 100%;
-  height: 480px;
+  height: 514px;
   top: 56px;
 
   display: flex;
@@ -184,7 +184,7 @@ export default {
   position: absolute;
   bottom: 8px;
 
-  width: 136px;
+  width: 168px;
   height: 8px;
   opacity: 1;
   border-radius: 4px;
@@ -192,9 +192,15 @@ export default {
 }
 .indicator-highlight {
   height: 8px;
-  width: 69px;
+  width: 84px;
   opacity: 1;
   border-radius: 4px;
   background-color: #ffffff;
+}
+
+/* theme preview (source art 204x292, enlarged to 240x344 for RW5) */
+.theme-preview {
+  width: 240px;
+  height: 344px;
 }
 </style>

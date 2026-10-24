@@ -2,6 +2,7 @@
  * 数据管理工具，用于管理本地用户设置数据及课程数据
  */
 import file from "@system.file"
+const config = require("../config")
 let allData = "internal://files/data/"
 let userSettingPath = "internal://files/data/userSetting.json"
 let courseDataPath = "internal://files/data/courseData.json"
@@ -184,7 +185,17 @@ function getCourseData() {
                 }
             },
             fail: function (data, code) {
-                console.log(`handling fail, code = ${code}`)
+                // 正式流程直接报错；只有调试开关打开时才回退到工程内置示例数据
+                if (config.DEBUG_DATA_FALLBACK) {
+                    console.log(`读取课程数据失败，回退内置数据，code = ${code}`)
+                    try {
+                        resolve(require("../../common/data/courseData.json"))
+                        return
+                    } catch (e) {
+                        console.log(`内置数据解析失败: ${e}`)
+                    }
+                }
+                console.log(`读取课程数据失败, code = ${code}`)
                 reject(new Error(`读取文件失败，错误码: ${code}`));
             }
         })
@@ -225,10 +236,82 @@ function changeCourseData(type, value = {}) { //之后要保留本地调课信�
     }
 }
 
+/**
+ * 调试用：启动时补齐本地数据文件（只补缺失的，不覆盖已有数据）
+ * 1) 没有 userSetting.json → 写入 themeName 与 guide_state = done（即跳过引导）
+ * 2) 没有 courseData.json → 写入工程内置的示例课程数据
+ * 由于不覆盖已有文件，设置页切换主题、后续调课等操作依然能保存。
+ * @param {string} themeName 无设置时写入的默认主题（Horizon / Nucleus）
+ * @param {function(boolean):void} [callback] 完成回调，参数表示数据是否就绪
+ * @returns {void}
+ */
+function debugEnsureData(themeName, callback) {
+    let finish = function (ok) {
+        if (typeof callback === "function") {
+            callback(ok)
+        }
+    }
+    let ensureCourseData = function () {
+        file.access({
+            uri: courseDataPath,
+            success: function () {
+                finish(true)
+            },
+            fail: function () {
+                file.writeText({
+                    uri: courseDataPath,
+                    text: JSON.stringify(require("../../common/data/courseData.json")),
+                    success: function () {
+                        console.log("[debug] 已写入内置课程数据 courseData.json")
+                        finish(true)
+                    },
+                    fail: function (data, code) {
+                        console.log(`[debug] 写入内置课程数据失败, code = ${code}`)
+                        finish(false)
+                    }
+                })
+            }
+        })
+    }
+    file.access({
+        uri: userSettingPath,
+        success: function () {
+            ensureCourseData()
+        },
+        fail: function () {
+            file.writeText({
+                uri: userSettingPath,
+                text: JSON.stringify({
+                    "dataStructureVersion": "1.1",
+                    "createTime": "",
+                    "lastUpdateTime": "",
+                    "setting": {
+                        "themeName": themeName || "Horizon",
+                        "dynamicEffects": true
+                    },
+                    "guide": {
+                        "guide_state": "done",
+                        "guide_step": "8"
+                    }
+                }),
+                success: function () {
+                    console.log("[debug] 已写入默认用户设置 userSetting.json")
+                    ensureCourseData()
+                },
+                fail: function (data, code) {
+                    console.log(`[debug] 写入用户设置失败, code = ${code}`)
+                    ensureCourseData()
+                }
+            })
+        }
+    })
+}
+
 module.exports = {
     isDataExist,
     initData,
     clearData,
+    debugEnsureData,
     getUserSetting,
     changeUserSetting,
     changeGuideSetting,

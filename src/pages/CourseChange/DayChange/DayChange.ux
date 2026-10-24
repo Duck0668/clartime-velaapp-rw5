@@ -156,8 +156,8 @@ export default {
   align-items: center;
 
   margin-bottom: 30px;
-  width: 324px;
-  height: 386px;
+  width: 408px;
+  height: 415px;
 
   scroll-snap-align: start;
 }
@@ -167,7 +167,7 @@ export default {
   justify-content: center;
   align-items: center;
 
-  width: 324px;
+  width: 408px;
   height: 98px;
 }
 
@@ -179,7 +179,7 @@ export default {
 
   left: 0px;
   top: 0px;
-  width: 324px;
+  width: 408px;
   height: 90px;
   opacity: 1;
   border-radius: 24px;
@@ -205,8 +205,8 @@ export default {
   justify-content: center;
   align-items: center;
 
-  width: 324px;
-  height: 386px;
+  width: 408px;
+  height: 426px;
 }
 
 .component-classChange-result {

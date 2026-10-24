@@ -8,7 +8,7 @@
         bounces="true"
         @scroll="updateHighlightLength"
       >
-        <img src="/common/assets/about_bg.png"/>
+        <img src="/common/assets/about_bg.png" style="width: 408px; height: 262px;"/>
         <div style="width: 100%" class="horizontal-center">
           <text class="component-about-titleText">澄序课程表</text>
           <text class="component-about-titleVersion" onclick="onVersionClick">
@@ -67,7 +67,7 @@
         </div>
         
       </scroll>
-      <img src="/common/assets/nav-bg.png" style="opacity:{{navOpacity}}" />
+      <img src="/common/assets/nav-bg.png" style="width: 432px; height: 56px; opacity:{{navOpacity}}" />
       <div class="component-nav-noback">
         <div class="component-nav-backGroup" onclick="exit">
           <img src="/common/assets/back_button.png" class="component-nav-backButton" />
@@ -84,7 +84,7 @@ export default {
   private: {
     title: "关于",
     time: "",
-    version: "0.4.1 - Beta",
+    version: "0.4.1 - RW5",
     timer: null,
     eggClickCount: 0,
     navOpacity: 0,
@@ -160,8 +160,8 @@ export default {
 @import "../../common/style/universal.css";
 @import "../../common/style/component.css";
 .content {
-  width: 336px;
-  height: 480px;
+  width: 432px;
+  height: 514px;
 
   display: flex;
   flex-direction: column;
@@ -169,7 +169,7 @@ export default {
   scroll-snap-type: y cross;
 }
 .scroll-content {
-  width: 336px;
+  width: 432px;
   height: 1680px;
   display: flex;
   flex-direction: column;
@@ -204,7 +204,7 @@ export default {
 
 /* 感谢描述 */
 .component-about-textCard {
-  width: 312px;
+  width: 408px;
   opacity: 1;
   border-radius: 30px;
   background-color: rgba(255, 255, 255, 0.1);
@@ -244,7 +244,7 @@ export default {
   flex-direction: column;
   padding: 12px;
 
-  width: 312px;
+  width: 408px;
   border-radius: 30px;
   background-color: rgba(255, 255, 255, 0.1);
 }

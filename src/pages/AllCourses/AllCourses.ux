@@ -186,8 +186,8 @@ export default {
 
 .component-allCourses-list {
   /* margin-bottom: 30px; */
-  width: 336px;
-  height: 480px;
+  width: 432px;
+  height: 514px;
 
 
   scroll-snap-align: start;
@@ -219,7 +219,7 @@ export default {
   justify-content: center;
   align-items: center;
 
-  width: 318px;
+  width: 408px;
   height: 185px;
 }
 
@@ -231,7 +231,7 @@ export default {
 
   left: 0px;
   top: 0px;
-  width: 318px;
+  width: 408px;
   height: 177px;
   opacity: 1;
   border-radius: 36px;
